@@ -3,7 +3,7 @@ import path from 'path';
 import { graphqlHTTP } from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import debugModule from 'debug';
-import schema from './schema';
+import schemaWithResolvers from './schemaWithResolvers';
 
 const httpDebug = debugModule('app:http');
 
@@ -19,7 +19,7 @@ app.use('/dist', express.static(path.join(__dirname, '../dist')));
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema,
+    schema: schemaWithResolvers,
     graphiql: false,
   }),
 );
