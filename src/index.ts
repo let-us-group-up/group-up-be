@@ -4,12 +4,16 @@ import { graphqlHTTP } from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import debugModule from 'debug';
 import schemaWithResolvers from './schemaWithResolvers';
+import connectDatabase from './connectDatabase';
 
 const httpDebug = debugModule('app:http');
 
 const PORT = 8080;
 
 const app = express();
+
+connectDatabase();
+
 app.use(express.json());
 
 app.get('/gql', expressPlayground({ endpoint: '/graphql' }));

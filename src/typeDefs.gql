@@ -1,7 +1,11 @@
 type User {
-  id: String
-  firstName: String
-  lastName: String
+  _id: String
+  email: String
+}
+
+
+type Mutation {
+  createUser(email: String): User
 }
 
 type Query {
