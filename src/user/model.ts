@@ -6,6 +6,21 @@ export interface User {
   email: string;
 }
 
+
+export const userModelTypeDefs = `
+  type User {
+    _id: String!
+    email: String!
+  }
+`;
+
+export const userModelResolvers = {
+  User: {
+    email: (user: User): string => user.email,
+  },
+};
+
+
 const userSchema = new Schema({
   email: String,
 });
