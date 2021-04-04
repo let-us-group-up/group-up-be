@@ -1,10 +1,17 @@
-import { Schema, model } from 'mongoose';
+import {
+  Schema, model, Document, Model, Types,
+} from 'mongoose';
 
 
 export interface User {
-  _id: string;
   email: string;
 }
+
+interface UserBaseDocument extends User, Document<Types.ObjectId> {}
+
+export type UserDocument = UserBaseDocument;
+
+export type UserModel = Model<UserDocument>;
 
 
 export const userModelTypeDefs = `
@@ -16,16 +23,17 @@ export const userModelTypeDefs = `
 
 export const userModelResolvers = {
   User: {
-    email: (user: User): string => user.email,
+    email: (user: UserDocument): string => user.email,
   },
 };
 
 
-const userSchema = new Schema({
-  email: String,
+const userSchema = new Schema<UserDocument, UserModel>({
+  email: { type: String, required: true, unique: true },
 });
 
-const User = model('users', userSchema);
+export const userModelName = 'users';
+const UserModel = model<UserDocument, UserModel>(userModelName, userSchema);
 
 
-export default User;
+export default UserModel;

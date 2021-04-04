@@ -1,4 +1,4 @@
-import UserModel, { User } from './model';
+import UserModel, { UserDocument } from './model';
 
 export const getUserTypeDefs = `
   type Query {
@@ -6,7 +6,7 @@ export const getUserTypeDefs = `
   }
 `;
 
-const getUser = async (root: void, { id }: { id: string }): Promise<User> => {
+const getUser = async (root: void, { id }: { id: string }): Promise<UserDocument | null> => {
   const user = await UserModel.findById(id);
   return user;
 };
