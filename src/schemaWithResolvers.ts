@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from 'graphql-tools';
+import { makeExecutableSchema, mergeTypeDefs } from 'graphql-tools';
 
 import userTypeDefs from './user/typeDefs';
 import userResolvers from './user/resolvers';
@@ -12,19 +12,23 @@ import messengerResolvers from './messenger/resolvers';
 import eventTypeDefs from './event/typeDefs';
 import eventResolvers from './event/resolvers';
 
+import customScalarsResolver from './customScalars';
+
 
 const schema = makeExecutableSchema({
-  typeDefs: [
+  typeDefs: mergeTypeDefs([
     userTypeDefs,
     addressTypeDefs,
     messengerTypeDefs,
     eventTypeDefs,
-  ],
+  ]),
   resolvers: [
     ...userResolvers,
     ...addressResolvers,
     ...messengerResolvers,
     ...eventResolvers,
+
+    customScalarsResolver,
   ],
 });
 

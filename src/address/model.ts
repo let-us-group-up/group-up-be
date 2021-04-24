@@ -24,13 +24,13 @@ export const addressModelTypeDefs = `
 `;
 
 
-const addressSchema = new Schema<AddressDocument, AddressModel>({
+const AddressSchema = new Schema<AddressDocument, AddressModel>({
   address1: { type: String, required: true },
   address2: { type: String, required: true },
 });
 
 export const addressModelName = 'addresses';
-const AddressModel = model<AddressDocument, AddressModel>(addressModelName, addressSchema);
+const AddressModel = model<AddressDocument, AddressModel>(addressModelName, AddressSchema);
 
 
 export default AddressModel;

@@ -28,12 +28,12 @@ export const userModelResolvers = {
 };
 
 
-const userSchema = new Schema<UserDocument, UserModel>({
+const UserSchema = new Schema<UserDocument, UserModel>({
   email: { type: String, required: true, unique: true },
 });
 
 export const userModelName = 'users';
-const UserModel = model<UserDocument, UserModel>(userModelName, userSchema);
+const UserModel = model<UserDocument, UserModel>(userModelName, UserSchema);
 
 
 export default UserModel;

@@ -4,7 +4,7 @@ import {
 
 
 export enum Provider {
-  Telegram,
+  Telegram = 'Telegram',
 }
 
 export interface Messenger {
@@ -30,7 +30,7 @@ export const messengerModelTypeDefs = `
 `;
 
 
-const messengerSchema = new Schema<MessengerDocument, MessengerModel>({
+const MessengerSchema = new Schema<MessengerDocument, MessengerModel>({
   provider: {
     type: String,
     enum: [Provider.Telegram],
@@ -41,7 +41,7 @@ const messengerSchema = new Schema<MessengerDocument, MessengerModel>({
 export const messengerModelName = 'messengers';
 const MessengerModel = model<MessengerDocument, MessengerModel>(
   messengerModelName,
-  messengerSchema,
+  MessengerSchema,
 );
 
 

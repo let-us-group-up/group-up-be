@@ -7,8 +7,8 @@ import { MessengerDocument, messengerModelName } from '../messenger/model';
 
 
 export enum Roles {
-  Organizer,
-  Participant,
+  Organizer = 'Organizer',
+  Participant = 'Participant',
 }
 
 export interface Participant<T> {
@@ -20,18 +20,22 @@ export interface Event {
   title: string;
   description?: string;
   dateAndTime?: Date;
-  address?: AddressDocument['_id'] | AddressDocument;
-  messenger?: MessengerDocument['_id'] | MessengerDocument;
-  participants: Array<Participant<UserDocument['_id'] | UserDocument>>;
+  address?: AddressDocument['_id'] | (AddressDocument | null);
+  messenger?: MessengerDocument['_id'] | (MessengerDocument | null);
+  participants: Array<Participant<UserDocument['_id'] | (UserDocument | null)>>;
 }
 
-interface EventBaseDocument extends Event, Document<Types.ObjectId> {}
+export interface EventBaseDocument extends Event, Document<Types.ObjectId> {}
 
 export interface EventDocument extends EventBaseDocument {
+  address?: AddressDocument['_id'];
+  messenger?: MessengerDocument['_id'];
   participants: Array<Participant<UserDocument['_id']>>;
 }
 
 export interface EventPopulatedDocument extends EventBaseDocument {
+  address?: AddressDocument;
+  messenger?: MessengerDocument;
   participants: Array<Participant<UserDocument>>;
 }
 
@@ -48,6 +52,8 @@ export const eventModelTypeDefs = `
     role: Roles!
     user: User!
   }
+
+  scalar Date
 
   type Event {
     _id: String!
@@ -67,7 +73,20 @@ export const eventModelResolvers = {
 };
 
 
-const eventSchema = new Schema<EventDocument, EventModel>({
+const ParticipantSchema = new Schema({
+  role: {
+    type: String,
+    enum: [Roles.Organizer, Roles.Participant],
+    default: Roles.Participant,
+  },
+  user: {
+    type: Types.ObjectId,
+    ref: userModelName,
+    required: true,
+  },
+});
+
+const EventSchema = new Schema<EventDocument, EventModel>({
   title: { type: String, required: true },
   description: String,
   dateAndTime: Date,
@@ -80,29 +99,18 @@ const eventSchema = new Schema<EventDocument, EventModel>({
     ref: messengerModelName,
   },
   participants: [{
-    type: {
-      role: {
-        type: String,
-        enum: [Roles.Organizer, Roles.Participant],
-        default: Roles.Participant,
-      },
-      user: {
-        type: Types.ObjectId,
-        ref: userModelName,
-        required: true,
-      },
-    },
+    type: ParticipantSchema,
     // eslint-disable-next-line object-shorthand, func-names
     required: function (this: EventBaseDocument): boolean {
       return this.participants.filter((
-        participant: Participant<unknown>,
+        participant,
       ) => participant.role === Roles.Organizer).length === 1;
     },
   }],
 });
 
 export const eventModelName = 'events';
-const EventModel = model<EventDocument, EventModel>(eventModelName, eventSchema);
+const EventModel = model<EventDocument, EventModel>(eventModelName, EventSchema);
 
 
 export default EventModel;
