@@ -6,7 +6,7 @@ import EventModel, {
 
 export const getEventTypeDefs = `
   type Query {
-    getEvent(id: String!): Event
+    event(id: ID!): Event
   }
 `;
 
@@ -23,6 +23,6 @@ const getEvent = async (root: void, { id }: { id: string }): Promise<GetEventDat
 
 export const getEventResolvers = {
   Query: {
-    getEvent,
+    event: getEvent,
   },
 };

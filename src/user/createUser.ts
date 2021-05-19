@@ -2,7 +2,7 @@ import UserModel, { UserDocument } from './model';
 
 export const createUserTypeDefs = `
   type Mutation {
-    createUser(email: String): User
+    createUser(email: String!): User
   }
 `;
 

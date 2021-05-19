@@ -24,7 +24,7 @@ export const messengerModelTypeDefs = `
   }
 
   type Messenger {
-    _id: String!
+    _id: ID!
     provider: Provider!
   }
 `;

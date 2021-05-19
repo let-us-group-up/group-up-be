@@ -17,7 +17,7 @@ export type AddressModel = Model<AddressDocument>;
 
 export const addressModelTypeDefs = `
   type Address {
-    _id: String!
+    _id: ID!
     address1: String!
     address2: String!
   }

@@ -1,10 +1,12 @@
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import debugModule from 'debug';
 import schemaWithResolvers from './schemaWithResolvers';
 import connectDatabase from './connectDatabase';
+
 
 const httpDebug = debugModule('app:http');
 
@@ -13,6 +15,8 @@ const PORT = 8080;
 const app = express();
 
 connectDatabase();
+
+app.use(cors());
 
 app.use(express.json());
 

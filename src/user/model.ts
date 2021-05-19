@@ -16,7 +16,7 @@ export type UserModel = Model<UserDocument>;
 
 export const userModelTypeDefs = `
   type User {
-    _id: String!
+    _id: ID!
     email: String!
   }
 `;
