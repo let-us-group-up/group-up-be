@@ -1,0 +1,56 @@
+type User {
+  _id: ID!
+  email: String!
+}
+
+type Query {
+  user(id: ID!): User
+  event(id: ID!): Event
+}
+
+type Mutation {
+  createUser(email: String!): User
+  createEvent(title: String!, author: String!): Event
+}
+
+type Address {
+  _id: ID!
+  address1: String!
+  address2: String!
+}
+
+enum Provider {
+  Telegram
+}
+
+type Messenger {
+  _id: ID!
+  provider: Provider!
+}
+
+enum Roles {
+  Organizer
+  Participant
+}
+
+type Participant {
+  role: Roles!
+  user: User!
+}
+
+scalar Date
+
+type Event {
+  _id: ID!
+  title: String!
+  description: String
+  dateAndTime: Date
+  address: Address
+  messenger: Messenger
+  participants: [Participant]!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

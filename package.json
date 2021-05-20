@@ -10,7 +10,8 @@
     "start:watch": "nodemon",
     "build": "cross-env NODE_ENV=production tsc",
     "lint": "eslint ./src/**/**.ts && echo 'lint complete'",
-    "pushTag": "git push && git push --tags"
+    "pushTag": "git push && git push --tags",
+    "generateSchema": "ts-node ./src/generateSchema.ts"
   },
   "dependencies": {
     "config": "^3.3.6",

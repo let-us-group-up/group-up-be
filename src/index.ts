@@ -22,7 +22,9 @@ app.use(express.json());
 
 app.get('/gql', expressPlayground({ endpoint: '/graphql' }));
 
-app.use('/dist', express.static(path.join(__dirname, '../dist')));
+app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
+
+app.use('/static', express.static(path.join(__dirname, '..', 'static')));
 
 app.use(
   '/graphql',
