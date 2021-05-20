@@ -8,7 +8,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development node --inspect=5858 -r ts-node/register ./src/index.ts",
     "start:watch": "nodemon",
-    "build": "cross-env NODE_ENV=production tsc",
+    "build": "yarn run generateSchema && cross-env NODE_ENV=production tsc",
     "lint": "eslint ./src/**/**.ts && echo 'lint complete'",
     "pushTag": "git push && git push --tags",
     "generateSchema": "ts-node ./src/generateSchema.ts"
