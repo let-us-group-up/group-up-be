@@ -1,5 +1,9 @@
-type User {
-  _id: ID!
+interface Node {
+  id: ID!
+}
+
+type User implements Node {
+  id: ID!
   email: String!
 }
 
@@ -13,8 +17,8 @@ type Mutation {
   createEvent(title: String!, author: String!): Event
 }
 
-type Address {
-  _id: ID!
+type Address implements Node {
+  id: ID!
   address1: String!
   address2: String!
 }
@@ -23,8 +27,8 @@ enum Provider {
   Telegram
 }
 
-type Messenger {
-  _id: ID!
+type Messenger implements Node {
+  id: ID!
   provider: Provider!
 }
 
@@ -40,8 +44,8 @@ type Participant {
 
 scalar Date
 
-type Event {
-  _id: ID!
+type Event implements Node {
+  id: ID!
   title: String!
   description: String
   dateAndTime: Date

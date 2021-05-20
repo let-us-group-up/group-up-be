@@ -23,8 +23,8 @@ export const messengerModelTypeDefs = `
     Telegram
   }
 
-  type Messenger {
-    _id: ID!
+  type Messenger implements Node {
+    id: ID!
     provider: Provider!
   }
 `;

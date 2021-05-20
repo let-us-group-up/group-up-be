@@ -55,8 +55,8 @@ export const eventModelTypeDefs = `
 
   scalar Date
 
-  type Event {
-    _id: ID!
+  type Event implements Node {
+    id: ID!
     title: String!
     description: String
     dateAndTime: Date
