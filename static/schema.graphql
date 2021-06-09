@@ -1,35 +1,68 @@
-interface Node {
+"""Address"""
+type Address {
+  address1: String!
+  address2: String!
   id: ID!
 }
 
-type User implements Node {
-  id: ID!
-  email: String!
+union AddressAndIDUnion = AddressIDUnionPart | AddressUnionPart
+
+type AddressIDUnionPart {
+  address: String!
 }
 
-type Query {
-  user(id: ID!): User
-  event(id: ID!): Event
+type AddressUnionPart {
+  address: Address!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+"""Event"""
+type Event {
+  address: AddressAndIDUnion
+  dateAndTime: Date
+  description: String
+  id: ID!
+  messenger: MessengerAndIDUnion
+  participants: [Participant!]!
+  title: String!
+}
+
+"""Messenger"""
+type Messenger {
+  id: ID!
+  provider: Provider!
+}
+
+union MessengerAndIDUnion = MessengerIDUnionPart | MessengerUnionPart
+
+type MessengerIDUnionPart {
+  messenger: String!
+}
+
+type MessengerUnionPart {
+  messenger: Messenger!
 }
 
 type Mutation {
-  createUser(email: String!): User
-  createEvent(title: String!, author: String!): Event
+  createEvent(author: ID!, title: String!): Event!
+  createUser(email: String!): User!
 }
 
-type Address implements Node {
-  id: ID!
-  address1: String!
-  address2: String!
+"""Participant"""
+type Participant {
+  role: Roles!
+  user: UserAndIDUnion!
 }
 
 enum Provider {
   Telegram
 }
 
-type Messenger implements Node {
-  id: ID!
-  provider: Provider!
+type Query {
+  event(id: ID!): Event
+  user(id: ID!): User!
 }
 
 enum Roles {
@@ -37,24 +70,18 @@ enum Roles {
   Participant
 }
 
-type Participant {
-  role: Roles!
-  user: User!
-}
-
-scalar Date
-
-type Event implements Node {
+"""User"""
+type User {
+  email: String!
   id: ID!
-  title: String!
-  description: String
-  dateAndTime: Date
-  address: Address
-  messenger: Messenger
-  participants: [Participant]!
 }
 
-schema {
-  query: Query
-  mutation: Mutation
+union UserAndIDUnion = UserIDUnionPart | UserUnionPart
+
+type UserIDUnionPart {
+  user: String!
+}
+
+type UserUnionPart {
+  user: User!
 }

@@ -515,6 +515,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@giraphql/core@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@giraphql/core/-/core-2.6.0.tgz#95f59e7edcd849aec7677993512584bb8f453b3a"
+  integrity sha512-j0UmDJY8I2lNW/h+JN/2uB+xbdA5XdBClbao1g9yL4LGKSvPV6I4XqJp/QlDSYt/ZjkyIp0U0p9fgmF4Cqn3CA==
+
 "@graphql-tools/batch-delegate@^7.0.0":
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/@graphql-tools/batch-delegate/-/batch-delegate-7.0.2.tgz#e18bfe3f545c60c03b0bc079fe4bfa8f208b1631"

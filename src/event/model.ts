@@ -1,9 +1,10 @@
 import {
   Schema, model, Document, Types, Model,
 } from 'mongoose';
-import { UserDocument, userModelName } from '../user/model';
-import { AddressDocument, addressModelName } from '../address/model';
-import { MessengerDocument, messengerModelName } from '../messenger/model';
+import builder from '../builder';
+import { User, userModelName, UserAndIDUnionGraphQL } from '../user/model';
+import { Address, addressModelName, AddressAndIDUnionGraphQL } from '../address/model';
+import { Messenger, messengerModelName, MessengerAndIDUnionGraphQL } from '../messenger/model';
 
 
 export enum Roles {
@@ -11,66 +12,138 @@ export enum Roles {
   Participant = 'Participant',
 }
 
+builder.enumType(Roles, {
+  name: 'Roles',
+});
+
 export interface Participant<T> {
   role: Roles;
   user: T;
 }
 
 export interface Event {
+  id: string;
   title: string;
   description?: string;
   dateAndTime?: Date;
-  address?: AddressDocument['_id'] | (AddressDocument | null);
-  messenger?: MessengerDocument['_id'] | (MessengerDocument | null);
-  participants: Array<Participant<UserDocument['_id'] | (UserDocument | null)>>;
+  address?: Address['id'] | Address;
+  messenger?: Messenger['id'] | Messenger;
+  participants: Array<Participant<User['id'] | User>>;
 }
 
-export interface EventBaseDocument extends Event, Document<Types.ObjectId> {}
+export interface EventBaseDocument extends Omit<Event, 'id'>, Document<Types.ObjectId> {}
 
 export interface EventDocument extends EventBaseDocument {
-  address?: AddressDocument['_id'];
-  messenger?: MessengerDocument['_id'];
-  participants: Array<Participant<UserDocument['_id']>>;
+  address?: Address['id'];
+  messenger?: Messenger['id'];
+  participants: Array<Participant<User['id']>>;
 }
 
 export interface EventPopulatedDocument extends EventBaseDocument {
-  address?: AddressDocument;
-  messenger?: MessengerDocument;
-  participants: Array<Participant<UserDocument>>;
+  address?: Address;
+  messenger?: Messenger;
+  participants: Array<Participant<User>>;
 }
 
 export type EventModel = Model<EventDocument>;
 
 
-export const eventModelTypeDefs = `
-  enum Roles {
-    Organizer
-    Participant
-  }
+const ParticipantGraphQLRef = builder.objectRef<Participant<User | User['id']>>('Participant');
 
-  type Participant {
-    role: Roles!
-    user: User!
-  }
+export const ParticipantGraphQL = builder.objectType(ParticipantGraphQLRef, {
+  description: 'Participant',
+  fields: (t) => ({
+    user: t.field({
+      type: UserAndIDUnionGraphQL,
+      resolve: (parent) => {
+        if (typeof parent.user === 'object') {
+          return {
+            userKind: 'User',
+            user: parent.user,
+          } as const;
+        }
 
-  scalar Date
+        return {
+          userKind: 'UserID',
+          user: parent.user,
+        } as const;
+      },
+    }),
+    role: t.field({
+      type: Roles,
+      resolve: (parent) => parent.role,
+    }),
+  }),
+});
 
-  type Event implements Node {
-    id: ID!
-    title: String!
-    description: String
-    dateAndTime: Date
-    address: Address
-    messenger: Messenger
-    participants: [Participant]!
-  }
-`;
+const EventGraphQLRef = builder.objectRef<Event>('Event');
 
-export const eventModelResolvers = {
-  Event: {
-    title: (event: EventBaseDocument): string => event.title,
-  },
-};
+export const EventGraphQL = builder.objectType(EventGraphQLRef, {
+  description: 'Event',
+  fields: (t) => ({
+    id: t.id({
+      resolve: (parent) => parent.id,
+    }),
+    title: t.string({
+      resolve: (parent) => parent.title,
+    }),
+    description: t.string({
+      nullable: true,
+      resolve: (parent) => parent.description,
+    }),
+    dateAndTime: t.field({
+      type: 'Date',
+      nullable: true,
+      resolve: (parent) => parent.dateAndTime,
+    }),
+    address: t.field({
+      type: AddressAndIDUnionGraphQL,
+      nullable: true,
+      resolve: (parent) => {
+        if (!parent.address) {
+          return null;
+        }
+
+        if (typeof parent.address === 'object') {
+          return {
+            addressKind: 'Address',
+            address: parent.address,
+          } as const;
+        }
+
+        return {
+          addressKind: 'AddressID',
+          address: parent.address,
+        } as const;
+      },
+    }),
+    messenger: t.field({
+      type: MessengerAndIDUnionGraphQL,
+      nullable: true,
+      resolve: (parent) => {
+        if (!parent.messenger) {
+          return null;
+        }
+
+        if (typeof parent.messenger === 'object') {
+          return {
+            messengerKind: 'Messenger',
+            messenger: parent.messenger,
+          } as const;
+        }
+
+        return {
+          messengerKind: 'MessengerID',
+          messenger: parent.messenger,
+        } as const;
+      },
+    }),
+    participants: t.field({
+      type: [ParticipantGraphQL],
+      resolve: (parent) => parent.participants,
+    }),
+  }),
+});
 
 
 const ParticipantSchema = new Schema({

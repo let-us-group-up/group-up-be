@@ -1,17 +1,16 @@
-import EventModel, { EventDocument, Roles } from './model';
+import EventModel, {
+  EventDocument, Roles, EventGraphQL, Event,
+} from './model';
+import { User } from '../user/model';
+import builder from '../builder';
 
-export const createEventTypeDefs = `
-  type Mutation {
-    createEvent(title: String!, author: String!): Event
-  }
-`;
 
-const createEvent = async (root: void, {
+const createEvent = async ({
   title,
   author,
 }: {
-  title: string,
-  author: string,
+  title: Event['title'],
+  author: User['id'],
 }): Promise<EventDocument> => {
   const event = await EventModel.create({
     title,
@@ -24,8 +23,24 @@ const createEvent = async (root: void, {
   return event;
 };
 
-export const createEventResolvers = {
-  Mutation: {
-    createEvent,
+interface NewEvent extends Event {
+  address: EventDocument['address'];
+  messenger: EventDocument['messenger'];
+  participants: EventDocument['participants'];
+}
+
+builder.mutationField('createEvent', (t) => t.field({
+  type: EventGraphQL,
+  args: {
+    title: t.arg.string({
+      required: true,
+    }),
+    author: t.arg.id({
+      required: true,
+    }),
   },
-};
+  resolve: async (root, { title, author }) => {
+    const event = await createEvent({ title, author: String(author) }) as NewEvent;
+    return event;
+  },
+}));

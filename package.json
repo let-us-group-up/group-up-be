@@ -14,6 +14,7 @@
     "generateSchema": "ts-node ./src/generateSchema.ts"
   },
   "dependencies": {
+    "@giraphql/core": "^2.6.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "debug": "^4.3.1",

@@ -1,18 +1,20 @@
-import UserModel, { UserDocument } from './model';
+import UserModel, { UserDocument, UserGraphQL, User } from './model';
+import builder from '../builder';
 
-export const getUserTypeDefs = `
-  type Query {
-    user(id: ID!): User
-  }
-`;
-
-const getUser = async (root: void, { id }: { id: string }): Promise<UserDocument | null> => {
+const getUser = async (id: string): Promise<UserDocument | null> => {
   const user = await UserModel.findById(id);
   return user;
 };
 
-export const getUserResolvers = {
-  Query: {
-    user: getUser,
+builder.queryField('user', (t) => t.field({
+  type: UserGraphQL,
+  args: {
+    id: t.arg.id({
+      required: true,
+    }),
   },
-};
+  resolve: async (root, { id }) => {
+    const user = await getUser(String(id)) as User;
+    return user;
+  },
+}));

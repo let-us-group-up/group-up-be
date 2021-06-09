@@ -1,19 +1,21 @@
-import UserModel, { UserDocument } from './model';
+import UserModel, { UserDocument, UserGraphQL, User } from './model';
+import builder from '../builder';
 
-export const createUserTypeDefs = `
-  type Mutation {
-    createUser(email: String!): User
-  }
-`;
-
-const createUser = async (root: void, { email }: { email: string }): Promise<UserDocument> => {
+const createUser = async (email: string): Promise<UserDocument> => {
   const user = new UserModel({ email });
   await user.save();
   return user;
 };
 
-export const createUserResolvers = {
-  Mutation: {
-    createUser,
+builder.mutationField('createUser', (t) => t.field({
+  type: UserGraphQL,
+  args: {
+    email: t.arg.string({
+      required: true,
+    }),
   },
-};
+  resolve: async (root, { email }) => {
+    const user = await createUser(email) as User;
+    return user;
+  },
+}));

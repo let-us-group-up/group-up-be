@@ -4,9 +4,8 @@ import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import debugModule from 'debug';
-import schemaWithResolvers from './schemaWithResolvers';
 import connectDatabase from './connectDatabase';
-
+import schema from './schema';
 
 const httpDebug = debugModule('app:http');
 
@@ -29,7 +28,7 @@ app.use('/static', express.static(path.join(__dirname, '..', 'static')));
 app.use(
   '/graphql',
   graphqlHTTP({
-    schema: schemaWithResolvers,
+    schema,
     graphiql: false,
   }),
 );
