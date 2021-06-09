@@ -6,6 +6,7 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import debugModule from 'debug';
 import connectDatabase from './connectDatabase';
 import schema from './schema';
+import { STATIC_FOLDER_NAME } from './constants';
 
 const httpDebug = debugModule('app:http');
 
@@ -23,7 +24,7 @@ app.get('/gql', expressPlayground({ endpoint: '/graphql' }));
 
 app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
-app.use('/static', express.static(path.join(__dirname, '..', 'static')));
+app.use('/static', express.static(path.join(__dirname, '..', STATIC_FOLDER_NAME)));
 
 app.use(
   '/graphql',
