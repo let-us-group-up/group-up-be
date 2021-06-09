@@ -1,7 +1,7 @@
 import {
   Schema, model, Document, Types, Model,
 } from 'mongoose';
-import builder from '../builder';
+import builder from '../../builder';
 import { User, userModelName, UserAndIDUnionGraphQL } from '../user/model';
 import { Address, addressModelName, AddressAndIDUnionGraphQL } from '../address/model';
 import { Messenger, messengerModelName, MessengerAndIDUnionGraphQL } from '../messenger/model';

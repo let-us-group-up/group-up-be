@@ -1,5 +1,5 @@
 import UserModel, { UserDocument, UserGraphQL, User } from './model';
-import builder from '../builder';
+import builder from '../../builder';
 
 const createUser = async (email: string): Promise<UserDocument> => {
   const user = new UserModel({ email });

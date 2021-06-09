@@ -2,7 +2,7 @@ import EventModel, {
   EventDocument, Roles, EventGraphQL, Event,
 } from './model';
 import { User } from '../user/model';
-import builder from '../builder';
+import builder from '../../builder';
 
 
 const createEvent = async ({

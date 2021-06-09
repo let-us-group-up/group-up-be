@@ -1,15 +1,15 @@
 import builder from './builder';
 
-import './user/model';
-import './user/createUser';
-import './user/getUser';
+import './modules/user/model';
+import './modules/user/createUser';
+import './modules/user/getUser';
 
-import './event/model';
-import './event/createEvent';
-import './event/getEvent';
+import './modules/event/model';
+import './modules/event/createEvent';
+import './modules/event/getEvent';
 
-import './messenger/model';
+import './modules/messenger/model';
 
-import './address/model';
+import './modules/address/model';
 
 export default builder.toSchema({});

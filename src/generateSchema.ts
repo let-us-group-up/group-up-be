@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import debugModule from 'debug';
-import { printSchema, lexicographicSortSchema } from 'graphql';
 import schema from './schema';
+import convertSchemaToString from './utils/convertSchemaToString';
 
 const debug = debugModule('app:tools');
 
-const schemaAsString = printSchema(lexicographicSortSchema(schema));
+const schemaAsString = convertSchemaToString(schema);
 
 // The absolute path of the new file with its name
 const filepath = path.resolve(__dirname, '..', 'static', 'schema.graphql');

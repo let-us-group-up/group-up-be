@@ -1,5 +1,5 @@
 import UserModel, { UserDocument, UserGraphQL, User } from './model';
-import builder from '../builder';
+import builder from '../../builder';
 
 const getUser = async (id: string): Promise<UserDocument | null> => {
   const user = await UserModel.findById(id);

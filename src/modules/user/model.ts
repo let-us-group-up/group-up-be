@@ -1,7 +1,7 @@
 import {
   Schema, model, Document, Model, Types,
 } from 'mongoose';
-import builder from '../builder';
+import builder from '../../builder';
 
 
 export interface User {

@@ -1,4 +1,3 @@
-// @flow
 import { connect } from 'mongoose';
 import config from 'config';
 import debugModule from 'debug';

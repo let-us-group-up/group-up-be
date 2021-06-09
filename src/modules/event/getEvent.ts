@@ -5,7 +5,7 @@ import EventModel, {
   EventGraphQL,
   Event,
 } from './model';
-import builder from '../builder';
+import builder from '../../builder';
 
 interface GetEventData extends EventBaseDocument {
   address: EventDocument['address'];
