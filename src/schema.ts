@@ -1,3 +1,4 @@
+import { GraphQLSchema } from 'graphql';
 import builder from './builder';
 
 import './modules/user/model';
@@ -12,4 +13,6 @@ import './modules/messenger/model';
 
 import './modules/address/model';
 
-export default builder.toSchema({});
+const schema: GraphQLSchema = builder.toSchema({});
+
+export default schema;
