@@ -1,9 +1,9 @@
-import UserModel, { UserDocument, UserGraphQL, User } from './model';
+import UserModel, { UserGraphQL, User } from './model';
 import builder from '../../builder';
 
-const getUser = async (id: string): Promise<UserDocument | null> => {
+const getUser = async (id: string): Promise<User | null> => {
   const user = await UserModel.findById(id);
-  return user;
+  return user && user.toObject<User>();
 };
 
 builder.queryField('user', (t) => t.field({
@@ -13,8 +13,9 @@ builder.queryField('user', (t) => t.field({
       required: true,
     }),
   },
+  nullable: true,
   resolve: async (root, { id }) => {
-    const user = await getUser(String(id)) as User;
+    const user = await getUser(String(id));
     return user;
   },
 }));

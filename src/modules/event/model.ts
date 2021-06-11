@@ -1,10 +1,16 @@
 import {
-  Schema, model, Document, Types, Model,
+  Schema, model, Document, Types, Model, PopulatedDoc, MakePopulated,
 } from 'mongoose';
 import builder from '../../builder';
-import { User, userModelName, UserAndIDUnionGraphQL } from '../user/model';
-import { Address, addressModelName, AddressAndIDUnionGraphQL } from '../address/model';
-import { Messenger, messengerModelName, MessengerAndIDUnionGraphQL } from '../messenger/model';
+import {
+  User, UserDocument, userModelName, UserAndIDUnionGraphQL,
+} from '../user/model';
+import {
+  Address, AddressDocument, addressModelName, AddressAndIDUnionGraphQL,
+} from '../address/model';
+import {
+  Messenger, MessengerDocument, messengerModelName, MessengerAndIDUnionGraphQL,
+} from '../messenger/model';
 
 
 export enum Roles {
@@ -21,41 +27,71 @@ export interface Participant<T> {
   user: T;
 }
 
+
+export interface BaseEvent {
+  id: string;
+  title: string;
+  description?: string;
+  dateAndTime?: Date;
+  address?: Address['id'] | (Address | null);
+  messenger?: Messenger['id'] | (Messenger | null);
+  participants: Array<Participant<User['id'] | (User | null)>>;
+}
+
 export interface Event {
   id: string;
   title: string;
   description?: string;
   dateAndTime?: Date;
-  address?: Address['id'] | Address;
-  messenger?: Messenger['id'] | Messenger;
-  participants: Array<Participant<User['id'] | User>>;
-}
-
-export interface EventBaseDocument extends Omit<Event, 'id'>, Document<Types.ObjectId> {}
-
-export interface EventDocument extends EventBaseDocument {
   address?: Address['id'];
   messenger?: Messenger['id'];
   participants: Array<Participant<User['id']>>;
 }
 
-export interface EventPopulatedDocument extends EventBaseDocument {
-  address?: Address;
-  messenger?: Messenger;
-  participants: Array<Participant<User>>;
+interface PopulatedEventParts {
+  address: Address | null;
+  messenger: Messenger | null;
+  participants: Array<Participant<User | null>>;
 }
+export type PopulatedEvent<K extends keyof PopulatedEventParts>
+  = MakePopulated<Event, PopulatedEventParts, K>;
+
+export interface BaseEventDocument extends Omit<Event, 'id'>, Document<Types.ObjectId> {
+  address?: PopulatedDoc<AddressDocument | null, AddressDocument['id']>;
+  messenger?: PopulatedDoc<MessengerDocument | null, MessengerDocument['id']>;
+  participants: Array<Participant<PopulatedDoc<UserDocument | null, UserDocument['id']>>>;
+}
+
+export interface EventDocument extends BaseEventDocument {
+  address?: AddressDocument['id'];
+  messenger?: MessengerDocument['id'];
+  participants: Array<Participant<UserDocument['id']>>;
+}
+
+interface PopulatedEventDocumentParts {
+  address: AddressDocument | null;
+  messenger: MessengerDocument | null;
+  participants: Array<Participant<UserDocument | null>>;
+}
+export type PopulatedEventDocument<K extends keyof PopulatedEventDocumentParts>
+  = MakePopulated<EventDocument, PopulatedEventDocumentParts, K>;
 
 export type EventModel = Model<EventDocument>;
 
 
-const ParticipantGraphQLRef = builder.objectRef<Participant<User | User['id']>>('Participant');
+const ParticipantGraphQLRef = builder.objectRef<Participant<User['id'] |(User | null)>>('Participant');
 
 export const ParticipantGraphQL = builder.objectType(ParticipantGraphQLRef, {
   description: 'Participant',
   fields: (t) => ({
     user: t.field({
       type: UserAndIDUnionGraphQL,
+      nullable: true,
       resolve: (parent) => {
+        if (!parent.user) {
+          return null;
+        }
+
         if (typeof parent.user === 'object') {
           return {
             userKind: 'User',
@@ -76,7 +112,7 @@ export const ParticipantGraphQL = builder.objectType(ParticipantGraphQLRef, {
   }),
 });
 
-const EventGraphQLRef = builder.objectRef<Event>('Event');
+const EventGraphQLRef = builder.objectRef<BaseEvent>('Event');
 
 export const EventGraphQL = builder.objectType(EventGraphQLRef, {
   description: 'Event',
@@ -174,7 +210,7 @@ const EventSchema = new Schema<EventDocument, EventModel>({
   participants: [{
     type: ParticipantSchema,
     // eslint-disable-next-line object-shorthand, func-names
-    required: function (this: EventBaseDocument): boolean {
+    required: function (this: BaseEventDocument): boolean {
       return this.participants.filter((
         participant,
       ) => participant.role === Roles.Organizer).length === 1;

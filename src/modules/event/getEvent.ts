@@ -1,28 +1,18 @@
 import EventModel, {
-  EventBaseDocument,
-  EventDocument,
-  EventPopulatedDocument,
-  EventGraphQL,
+  PopulatedEventDocument,
   Event,
+  PopulatedEvent,
+  EventGraphQL,
 } from './model';
 import builder from '../../builder';
 
-interface GetEventData extends EventBaseDocument {
-  address: EventDocument['address'];
-  messenger: EventDocument['messenger'];
-  participants: EventPopulatedDocument['participants'];
-}
 
-const getEvent = async (id: string): Promise<GetEventData | null> => {
-  const event = await EventModel.findById(id).populate('participants.user') as GetEventData | null;
-  return event;
+type PopulatedEventType = PopulatedEvent<'participants'>;
+
+const getEvent = async (id: Event['id']): Promise<PopulatedEventType | null> => {
+  const event = await EventModel.findById(id).populate('participants.user') as PopulatedEventDocument<'participants'>;
+  return event && event.toObject<PopulatedEventType>();
 };
-
-interface PopulatedEvent extends Event {
-  address: EventDocument['address'];
-  messenger: EventDocument['messenger'];
-  participants: EventPopulatedDocument['participants'];
-}
 
 builder.queryField('event', (t) => t.field({
   type: EventGraphQL,
@@ -33,7 +23,7 @@ builder.queryField('event', (t) => t.field({
   },
   nullable: true,
   resolve: async (root, { id }) => {
-    const event = await getEvent(String(id)) as PopulatedEvent | null;
+    const event = await getEvent(String(id));
     return event;
   },
 }));
