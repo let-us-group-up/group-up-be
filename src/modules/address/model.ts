@@ -1,7 +1,7 @@
 import {
-  Schema, model, Document, Model, Types,
-} from 'mongoose';
-import builder from '../../builder';
+  Schema, model, Document, Model,
+} from '../../database/model';
+import builder from '../../graphql/builder';
 
 
 export interface Address {
@@ -10,7 +10,7 @@ export interface Address {
   address2: string;
 }
 
-interface AddressBaseDocument extends Omit<Address, 'id'>, Document<Types.ObjectId> {}
+type AddressBaseDocument = Document<Address>;
 
 export type AddressDocument = AddressBaseDocument;
 

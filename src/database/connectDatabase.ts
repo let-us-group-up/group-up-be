@@ -9,7 +9,7 @@ const debug = debugModule('app:db');
 
 
 set('toObject', {
-  transform: (doc: any, ret: any) => {
+  transform: (doc: unknown, ret: Record<string, unknown>) => {
     ret.id = ret._id;
     delete ret._id;
     delete ret.__v;

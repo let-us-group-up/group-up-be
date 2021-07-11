@@ -1,7 +1,7 @@
 import {
-  Schema, model, Document, Types, Model, PopulatedDoc, MakePopulated,
-} from 'mongoose';
-import builder from '../../builder';
+  Schema, model, Document, Model, Types, PopulatedDoc, MakePopulated,
+} from '../../database/model';
+import builder from '../../graphql/builder';
 import { getQueryObject } from '../../graphql/graphqlQueryMapper';
 import {
   User, UserDocument, userModelName, UserGraphQL,
@@ -42,11 +42,7 @@ export interface BaseEvent {
   participants: Array<Participant<User['id'] | (User | null)>>;
 }
 
-export interface Event {
-  id: string;
-  title: string;
-  description?: string;
-  dateAndTime?: Date;
+export interface Event extends BaseEvent {
   address?: Address['id'];
   messenger?: Messenger['id'];
   participants: Array<Participant<User['id']>>;
@@ -60,7 +56,7 @@ interface PopulatedEventParts {
 export type PopulatedEvent<K extends keyof PopulatedEventParts>
   = MakePopulated<Event, PopulatedEventParts, K>;
 
-export interface BaseEventDocument extends Omit<Event, 'id'>, Document<Types.ObjectId> {
+export interface BaseEventDocument extends Document<Event> {
   address?: PopulatedDoc<AddressDocument | null, AddressDocument['id']>;
   messenger?: PopulatedDoc<MessengerDocument | null, MessengerDocument['id']>;
   participants: Array<Participant<PopulatedDoc<UserDocument | null, UserDocument['id']>>>;

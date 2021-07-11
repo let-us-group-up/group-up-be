@@ -4,8 +4,8 @@ import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import debugModule from 'debug';
-import connectDatabase from './connectDatabase';
-import schema from './schema';
+import connectDatabase from './database/connectDatabase';
+import schema from './graphql/schema';
 import { STATIC_FOLDER_NAME } from './constants';
 
 const httpDebug = debugModule('app:http');

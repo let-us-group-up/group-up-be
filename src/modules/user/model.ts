@@ -1,7 +1,7 @@
 import {
-  Schema, model, Document, Model, Types,
-} from 'mongoose';
-import builder from '../../builder';
+  Schema, model, Document, Model,
+} from '../../database/model';
+import builder from '../../graphql/builder';
 
 
 export interface User {
@@ -9,7 +9,7 @@ export interface User {
   email: string;
 }
 
-interface UserBaseDocument extends Omit<User, 'id'>, Document<Types.ObjectId> {}
+type UserBaseDocument = Document<User>;
 
 export type UserDocument = UserBaseDocument;
 

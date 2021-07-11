@@ -1,7 +1,7 @@
 import {
-  Schema, model, Document, Model, Types,
-} from 'mongoose';
-import builder from '../../builder';
+  Schema, model, Document, Model,
+} from '../../database/model';
+import builder from '../../graphql/builder';
 
 
 export enum Provider {
@@ -17,7 +17,7 @@ export interface Messenger {
   provider: Provider;
 }
 
-interface MessengerBaseDocument extends Omit<Messenger, 'id'>, Document<Types.ObjectId> {}
+type MessengerBaseDocument = Document<Messenger>;
 
 export type MessengerDocument = MessengerBaseDocument;
 

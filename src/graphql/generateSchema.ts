@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import debugModule from 'debug';
 import schema from './schema';
-import convertSchemaToString from './graphql/convertSchemaToString';
-import { STATIC_FOLDER_NAME } from './constants';
+import convertSchemaToString from './convertSchemaToString';
+import { STATIC_FOLDER_NAME } from '../constants';
 
 const debug = debugModule('app:tools');
 

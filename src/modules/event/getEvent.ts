@@ -2,7 +2,7 @@ import EventModel, {
   Event,
   EventGraphQL,
 } from './model';
-import builder from '../../builder';
+import builder from '../../graphql/builder';
 
 
 const getEvent = async (id: Event['id']): Promise<Event | null> => {
