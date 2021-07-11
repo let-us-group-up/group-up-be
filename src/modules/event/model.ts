@@ -1,8 +1,8 @@
 import {
   Schema, model, Document, Types, Model, PopulatedDoc, MakePopulated,
 } from 'mongoose';
-import { getQueryObject } from '@aerogear/graphql-query-mapper';
 import builder from '../../builder';
+import { getQueryObject } from '../../graphql/graphqlQueryMapper';
 import {
   User, UserDocument, userModelName, UserGraphQL,
 } from '../user/model';
@@ -92,8 +92,8 @@ export const ParticipantGraphQL = builder.objectType(ParticipantGraphQLRef, {
       type: UserGraphQL,
       nullable: true,
       resolve: (parent, params, context, info) => {
-        const queryData = getQueryObject(info);
-        if (queryData.fields.length === 1 && queryData.fields[0] === 'id') {
+        const queryObject = getQueryObject(info);
+        if (queryObject.isOnlyIdFieldQueried()) {
           return { id: parent.user } as User;
         }
         return getUser(parent.user);
@@ -131,8 +131,8 @@ export const EventGraphQL = builder.objectType(EventGraphQLRef, {
       nullable: true,
       resolve: (parent, params, context, info) => {
         if (!parent.address) return null;
-        const queryData = getQueryObject(info);
-        if (queryData.fields.length === 1 && queryData.fields[0] === 'id') {
+        const queryObject = getQueryObject(info);
+        if (queryObject.isOnlyIdFieldQueried()) {
           return { id: parent.address } as Address;
         }
         return getAddress(parent.address);
@@ -143,8 +143,8 @@ export const EventGraphQL = builder.objectType(EventGraphQLRef, {
       nullable: true,
       resolve: (parent, params, context, info) => {
         if (!parent.messenger) return null;
-        const queryData = getQueryObject(info);
-        if (queryData.fields.length === 1 && queryData.fields[0] === 'id') {
+        const queryObject = getQueryObject(info);
+        if (queryObject.isOnlyIdFieldQueried()) {
           return { id: parent.messenger } as Messenger;
         }
         return getMessenger(parent.messenger);
