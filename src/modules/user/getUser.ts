@@ -2,8 +2,8 @@ import UserModel, { UserGraphQL, User } from './model';
 import builder from '../../builder';
 
 const getUser = async (id: string): Promise<User | null> => {
-  const user = await UserModel.findById(id);
-  return user && user.toObject<User>();
+  const user = await UserModel.findById(id).lean<User>();
+  return user;
 };
 
 builder.queryField('user', (t) => t.field({
@@ -19,3 +19,5 @@ builder.queryField('user', (t) => t.field({
     return user;
   },
 }));
+
+export default getUser;

@@ -33,41 +33,6 @@ export const AddressGraphQL = builder.objectType(AddressGraphQLRef, {
     }),
   }),
 });
-const AddressIDUnionPartGraphQL = builder.objectType(
-  builder.objectRef<{ addressKind: 'AddressID'; address: Address['id'] }>('AddressIDUnionPart'), {
-    fields: (t) => ({
-      address: t.field({
-        type: 'String',
-        resolve: (parent) => parent.address,
-      }),
-    }),
-  },
-);
-
-const AddressUnionPartGraphQL = builder.objectType(
-  builder.objectRef<{ addressKind: 'Address'; address: Address }>('AddressUnionPart'), {
-    fields: (t) => ({
-      address: t.field({
-        type: AddressGraphQL,
-        resolve: (parent) => parent.address,
-      }),
-    }),
-  },
-);
-
-export const AddressAndIDUnionGraphQL = builder.unionType('AddressAndIDUnion', {
-  types: [AddressIDUnionPartGraphQL, AddressUnionPartGraphQL],
-  resolveType: (address) => {
-    switch (address.addressKind) {
-      case 'AddressID':
-        return AddressIDUnionPartGraphQL;
-      case 'Address':
-        return AddressUnionPartGraphQL;
-      default:
-        return AddressIDUnionPartGraphQL;
-    }
-  },
-});
 
 
 const AddressSchema = new Schema<AddressDocument, AddressModel>({

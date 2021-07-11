@@ -1,8 +1,23 @@
-import { connect } from 'mongoose';
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+import { connect, set, plugin } from 'mongoose';
+import mongooseLeanId from 'mongoose-lean-id';
 import config from 'config';
 import debugModule from 'debug';
 
 const debug = debugModule('app:db');
+
+
+set('toObject', {
+  transform: (doc: any, ret: any) => {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+  },
+});
+
+plugin(mongooseLeanId);
+
 
 const connectDatabase = (): void => {
   if (!config.has('db.username') || !config.get('db.password')) {

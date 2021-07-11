@@ -14,6 +14,7 @@
     "generateSchema": "ts-node ./src/generateSchema.ts"
   },
   "dependencies": {
+    "@aerogear/graphql-query-mapper": "^0.4.2",
     "@giraphql/core": "^2.6.0",
     "config": "^3.3.6",
     "cors": "^2.8.5",
@@ -23,7 +24,8 @@
     "graphql": "^15.5.0",
     "graphql-playground-middleware-express": "^1.7.22",
     "graphql-tools": "^7.0.4",
-    "mongoose": "^5.12.2"
+    "mongoose": "^5.12.2",
+    "mongoose-lean-id": "^0.2.0"
   },
   "devDependencies": {
     "@types/config": "^0.0.38",

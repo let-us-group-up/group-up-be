@@ -1,16 +1,20 @@
 import {
   Schema, model, Document, Types, Model, PopulatedDoc, MakePopulated,
 } from 'mongoose';
+import { getQueryObject } from '@aerogear/graphql-query-mapper';
 import builder from '../../builder';
 import {
-  User, UserDocument, userModelName, UserAndIDUnionGraphQL,
+  User, UserDocument, userModelName, UserGraphQL,
 } from '../user/model';
 import {
-  Address, AddressDocument, addressModelName, AddressAndIDUnionGraphQL,
+  Address, AddressDocument, addressModelName, AddressGraphQL,
 } from '../address/model';
 import {
-  Messenger, MessengerDocument, messengerModelName, MessengerAndIDUnionGraphQL,
+  Messenger, MessengerDocument, messengerModelName, MessengerGraphQL,
 } from '../messenger/model';
+import getUser from '../user/getUser';
+import getAddress from '../address/getAddress';
+import getMessenger from '../messenger/getMessenger';
 
 
 export enum Roles {
@@ -79,30 +83,20 @@ export type PopulatedEventDocument<K extends keyof PopulatedEventDocumentParts>
 export type EventModel = Model<EventDocument>;
 
 
-const ParticipantGraphQLRef = builder.objectRef<Participant<User['id'] |(User | null)>>('Participant');
+const ParticipantGraphQLRef = builder.objectRef<Participant<User['id']>>('Participant');
 
 export const ParticipantGraphQL = builder.objectType(ParticipantGraphQLRef, {
   description: 'Participant',
   fields: (t) => ({
     user: t.field({
-      type: UserAndIDUnionGraphQL,
+      type: UserGraphQL,
       nullable: true,
-      resolve: (parent) => {
-        if (!parent.user) {
-          return null;
+      resolve: (parent, params, context, info) => {
+        const queryData = getQueryObject(info);
+        if (queryData.fields.length === 1 && queryData.fields[0] === 'id') {
+          return { id: parent.user } as User;
         }
-
-        if (typeof parent.user === 'object') {
-          return {
-            userKind: 'User',
-            user: parent.user,
-          } as const;
-        }
-
-        return {
-          userKind: 'UserID',
-          user: parent.user,
-        } as const;
+        return getUser(parent.user);
       },
     }),
     role: t.field({
@@ -112,7 +106,7 @@ export const ParticipantGraphQL = builder.objectType(ParticipantGraphQLRef, {
   }),
 });
 
-const EventGraphQLRef = builder.objectRef<BaseEvent>('Event');
+const EventGraphQLRef = builder.objectRef<Event>('Event');
 
 export const EventGraphQL = builder.objectType(EventGraphQLRef, {
   description: 'Event',
@@ -133,45 +127,27 @@ export const EventGraphQL = builder.objectType(EventGraphQLRef, {
       resolve: (parent) => parent.dateAndTime,
     }),
     address: t.field({
-      type: AddressAndIDUnionGraphQL,
+      type: AddressGraphQL,
       nullable: true,
-      resolve: (parent) => {
-        if (!parent.address) {
-          return null;
+      resolve: (parent, params, context, info) => {
+        if (!parent.address) return null;
+        const queryData = getQueryObject(info);
+        if (queryData.fields.length === 1 && queryData.fields[0] === 'id') {
+          return { id: parent.address } as Address;
         }
-
-        if (typeof parent.address === 'object') {
-          return {
-            addressKind: 'Address',
-            address: parent.address,
-          } as const;
-        }
-
-        return {
-          addressKind: 'AddressID',
-          address: parent.address,
-        } as const;
+        return getAddress(parent.address);
       },
     }),
     messenger: t.field({
-      type: MessengerAndIDUnionGraphQL,
+      type: MessengerGraphQL,
       nullable: true,
-      resolve: (parent) => {
-        if (!parent.messenger) {
-          return null;
+      resolve: (parent, params, context, info) => {
+        if (!parent.messenger) return null;
+        const queryData = getQueryObject(info);
+        if (queryData.fields.length === 1 && queryData.fields[0] === 'id') {
+          return { id: parent.messenger } as Messenger;
         }
-
-        if (typeof parent.messenger === 'object') {
-          return {
-            messengerKind: 'Messenger',
-            messenger: parent.messenger,
-          } as const;
-        }
-
-        return {
-          messengerKind: 'MessengerID',
-          messenger: parent.messenger,
-        } as const;
+        return getMessenger(parent.messenger);
       },
     }),
     participants: t.field({
@@ -217,6 +193,7 @@ const EventSchema = new Schema<EventDocument, EventModel>({
     },
   }],
 });
+
 
 export const eventModelName = 'events';
 const EventModel = model<EventDocument, EventModel>(eventModelName, EventSchema);

@@ -53,7 +53,7 @@ type Mutation {
 """Participant"""
 type Participant {
   role: Roles!
-  user: UserAndIDUnion!
+  user: UserAndIDUnion
 }
 
 enum Provider {
@@ -62,7 +62,7 @@ enum Provider {
 
 type Query {
   event(id: ID!): Event
-  user(id: ID!): User!
+  user(id: ID!): User
 }
 
 enum Roles {

@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@aerogear/graphql-query-mapper@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@aerogear/graphql-query-mapper/-/graphql-query-mapper-0.4.2.tgz#c2514ce2770118739073cf7018034237b7424b36"
+  integrity sha512-tRMdoyfAz/CoA0c8CxRu65xLKqXJHeZhlelZsVSJH7neyHS1XNhl9ehyrN8qEcYqV3x9kfL9bfMzJYNzvx6sHQ==
+
 "@apollo/client@^3.2.5":
   version "3.3.11"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.3.11.tgz#125051405e83dc899d471d43b79fd6045d92a802"
@@ -2995,6 +3000,11 @@ mongodb@3.6.5:
     safe-buffer "^5.1.2"
   optionalDependencies:
     saslprep "^1.0.0"
+
+mongoose-lean-id@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/mongoose-lean-id/-/mongoose-lean-id-0.2.0.tgz#f88a92e65ecd1001f54bf0d1a20dfcc09693ebdc"
+  integrity sha512-ioC++wVTfprE2wh7Baw4jdZ1mCIpK3uw74sWf53enNCKZHVhKsL7fMyB1ryb4SmGwOj4StebTGy7YwimjZ0Qlg==
 
 mongoose-legacy-pluralize@1.0.2:
   version "1.0.2"

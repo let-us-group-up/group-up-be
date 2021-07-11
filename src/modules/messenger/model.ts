@@ -39,42 +39,6 @@ export const MessengerGraphQL = builder.objectType(MessengerGraphQLRef, {
   }),
 });
 
-const MessengerIDUnionPartGraphQL = builder.objectType(
-  builder.objectRef<{ messengerKind: 'MessengerID'; messenger: Messenger['id'] }>('MessengerIDUnionPart'), {
-    fields: (t) => ({
-      messenger: t.field({
-        type: 'String',
-        resolve: (parent) => parent.messenger,
-      }),
-    }),
-  },
-);
-
-const MessengerUnionPartGraphQL = builder.objectType(
-  builder.objectRef<{ messengerKind: 'Messenger'; messenger: Messenger }>('MessengerUnionPart'), {
-    fields: (t) => ({
-      messenger: t.field({
-        type: MessengerGraphQL,
-        resolve: (parent) => parent.messenger,
-      }),
-    }),
-  },
-);
-
-export const MessengerAndIDUnionGraphQL = builder.unionType('MessengerAndIDUnion', {
-  types: [MessengerIDUnionPartGraphQL, MessengerUnionPartGraphQL],
-  resolveType: (messenger) => {
-    switch (messenger.messengerKind) {
-      case 'MessengerID':
-        return MessengerIDUnionPartGraphQL;
-      case 'Messenger':
-        return MessengerUnionPartGraphQL;
-      default:
-        return MessengerIDUnionPartGraphQL;
-    }
-  },
-});
-
 
 const MessengerSchema = new Schema<MessengerDocument, MessengerModel>({
   provider: {
