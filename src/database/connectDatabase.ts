@@ -6,6 +6,7 @@ import config from 'config';
 import debugModule from 'debug';
 
 const debug = debugModule('app:db');
+const debugError = debugModule('app:db-error');
 
 
 set('toObject', {
@@ -35,7 +36,7 @@ const connectDatabase = (): void => {
     },
   )
     .then(() => debug('Connected to MongoDB'))
-    .catch(() => debug('Could not connect to MongoDB'));
+    .catch(() => debugError('Could not connect to MongoDB'));
 };
 
 

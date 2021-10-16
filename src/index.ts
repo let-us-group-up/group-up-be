@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
@@ -7,6 +8,8 @@ import debugModule from 'debug';
 import connectDatabase from './database/connectDatabase';
 import schema from './graphql/schema';
 import { STATIC_FOLDER_NAME } from './constants';
+
+dotenv.config();
 
 const httpDebug = debugModule('app:http');
 

@@ -10,7 +10,7 @@ const debug = debugModule('app:tools');
 const schemaAsString = convertSchemaToString(schema);
 
 // The absolute path of the new file with its name
-const filepath = path.resolve(__dirname, '..', STATIC_FOLDER_NAME, 'schema.graphql');
+const filepath = path.resolve(__dirname, '..', '..', STATIC_FOLDER_NAME, 'schema.graphql');
 
 fs.writeFile(filepath, schemaAsString, (err) => {
   if (err) throw err;

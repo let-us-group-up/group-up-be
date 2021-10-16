@@ -8,6 +8,7 @@ import '../modules/user/getUser';
 import '../modules/event/model';
 import '../modules/event/createEvent';
 import '../modules/event/getEvent';
+import '../modules/event/getEvents';
 
 import '../modules/messenger/model';
 

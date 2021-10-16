@@ -11,7 +11,7 @@
     "build": "yarn run generateSchema && cross-env NODE_ENV=production tsc",
     "lint": "eslint ./src/**/**.ts && echo 'lint complete'",
     "pushTag": "git push && git push --tags",
-    "generateSchema": "ts-node ./src/generateSchema.ts"
+    "generateSchema": "ts-node ./src/graphql/generateSchema.ts"
   },
   "dependencies": {
     "@aerogear/graphql-query-mapper": "^0.4.2",
@@ -19,6 +19,7 @@
     "config": "^3.3.6",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.0",

@@ -5,26 +5,16 @@ type Address {
   id: ID!
 }
 
-union AddressAndIDUnion = AddressIDUnionPart | AddressUnionPart
-
-type AddressIDUnionPart {
-  address: String!
-}
-
-type AddressUnionPart {
-  address: Address!
-}
-
 """Date custom scalar type"""
 scalar Date
 
 """Event"""
 type Event {
-  address: AddressAndIDUnion
+  address: Address
   dateAndTime: Date
   description: String
   id: ID!
-  messenger: MessengerAndIDUnion
+  messenger: Messenger
   participants: [Participant!]!
   title: String!
 }
@@ -35,16 +25,6 @@ type Messenger {
   provider: Provider!
 }
 
-union MessengerAndIDUnion = MessengerIDUnionPart | MessengerUnionPart
-
-type MessengerIDUnionPart {
-  messenger: String!
-}
-
-type MessengerUnionPart {
-  messenger: Messenger!
-}
-
 type Mutation {
   createEvent(author: ID!, title: String!): Event!
   createUser(email: String!): User!
@@ -53,7 +33,7 @@ type Mutation {
 """Participant"""
 type Participant {
   role: Roles!
-  user: UserAndIDUnion
+  user: User
 }
 
 enum Provider {
@@ -62,6 +42,7 @@ enum Provider {
 
 type Query {
   event(id: ID!): Event
+  events: [Event]!
   user(id: ID!): User
 }
 
@@ -74,14 +55,4 @@ enum Roles {
 type User {
   email: String!
   id: ID!
-}
-
-union UserAndIDUnion = UserIDUnionPart | UserUnionPart
-
-type UserIDUnionPart {
-  user: String!
-}
-
-type UserUnionPart {
-  user: User!
 }
