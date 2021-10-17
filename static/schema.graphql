@@ -26,7 +26,7 @@ type Messenger {
 }
 
 type Mutation {
-  createEvent(author: ID!, title: String!): Event!
+  createEvent(author: ID!, description: String, title: String!): Event!
   createUser(email: String!): User!
 }
 
@@ -42,7 +42,7 @@ enum Provider {
 
 type Query {
   event(id: ID!): Event
-  events: [Event]!
+  events: [Event!]!
   user(id: ID!): User
 }
 

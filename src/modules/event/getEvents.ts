@@ -12,7 +12,6 @@ const getEvents = async (): Promise<Array<Event>> => {
 
 builder.queryField('events', (t) => t.field({
   type: [EventGraphQL],
-  nullable: { list: false, items: true },
   resolve: async () => {
     const events = await getEvents();
     return events;

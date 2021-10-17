@@ -7,13 +7,16 @@ import builder from '../../graphql/builder';
 
 const createEvent = async ({
   title,
+  description,
   author,
 }: {
   title: Event['title'],
+  description: Event['description'],
   author: User['id'],
 }): Promise<Event> => {
   const event = await EventModel.create({
     title,
+    description,
     participants: [{
       role: Roles.Organizer,
       user: author,
@@ -29,12 +32,21 @@ builder.mutationField('createEvent', (t) => t.field({
     title: t.arg.string({
       required: true,
     }),
+    description: t.arg.string(),
     author: t.arg.id({
       required: true,
     }),
   },
-  resolve: async (root, { title, author }) => {
-    const event = await createEvent({ title, author: String(author) });
+  resolve: async (root, {
+    title,
+    description,
+    author,
+  }) => {
+    const event = await createEvent({
+      title,
+      description: description || undefined,
+      author: String(author),
+    });
     return event;
   },
 }));
